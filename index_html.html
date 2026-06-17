@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宜立興業有限公司</title>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // ▼▼▼ 請至 https://www.emailjs.com 免費註冊後填入以下三個 ID ▼▼▼
+    const EMAILJS_PUBLIC_KEY  = '填入您的 Public Key';   // Account → General → Public Key
+    const EMAILJS_SERVICE_ID  = '填入您的 Service ID';   // Email Services → Service ID
+    const EMAILJS_TEMPLATE_ID = '填入您的 Template ID';  // Email Templates → Template ID
+    // ▲▲▲ Template 中請設定：to_email = eil.sin@msa.hinet.net ▲▲▲
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DFKai-SB", "標楷體", serif;
+      background: #eef4fc;
+      color: #2c2c2a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 頁首上半：公司名稱區 ── */
+    .header-top {
+      background: linear-gradient(180deg, #eef4fc 0%, #eef4fc 60%, #eef4fc 100%);
+      padding: 1.1rem 2rem 0.9rem;
+    }
+    .header-top h1 {
+      font-size: 35px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      letter-spacing: 0.33em;
+    }
+    .header-top .tagline {
+      font-size: 18px;
+      font-weight: 700;
+      color: #444;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── 頁首下半：導覽列 ── */
+    nav {
+      background: linear-gradient(180deg, #dff2e1 0%, #eef8f0 100%);
+      border-top: 0.5px solid #d0cfc8;
+      border-bottom: 1.5px solid #b0bec8;
+      padding: 0 2rem;
+      display: flex;
+      align-items: stretch;
+    }
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.6rem 1.25rem;
+      font-size: 18.5px;
+      font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+      font-weight: 700;
+      color: #555;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      cursor: pointer;
+    }
+    nav a:hover { color: #555; background: transparent; border-bottom-color: #e8843a; }
+    nav a.active { color: #555; border-bottom-color: #e8843a; font-weight: 700; }
+
+    /* ── 頁面區塊（切換用） ── */
+    .page { display: none; }
+    .page.active { display: contents; }
+
+    /* ── main 四欄並排 ── */
+    main {
+      display: grid;
+      grid-template-columns: 260px 1fr 1fr 1fr;
+      gap: 0;
+      max-width: 1400px;
+      width: 100%;
+      margin: 2rem auto;
+      border: 0.5px solid #c4c2ba;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #eef4fc;
+      align-self: start;
+    }
+
+    /* ── 欄通用 ── */
+    .col {
+      display: flex;
+      flex-direction: column;
+      min-height: 500px;
+    }
+
+    .col + .col {
+      border-left: 0.5px solid #e0ddd6;
+    }
+
+    .col-header {
+      padding: 1rem 1.25rem 0.85rem;
+      border-bottom: 0.5px solid #e0ddd6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ddeaf8;
+      min-height: 56px;
+    }
+
+    .col-header svg { color: #2d5a3d; flex-shrink: 0; }
+    .col-header h2 { font-size: 19px; font-weight: 700; color: #2c2c2a; letter-spacing: 0.05em; }
+
+    .col-body {
+      padding: 1.25rem;
+      flex: 1;
+    }
+
+    /* ── 欄 1：公司資訊 ── */
+    .img-box {
+      width: 100%;
+      aspect-ratio: 3/2;
+      background: #c8dfc0;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #2d5a3d;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-box span { font-size: 17px; opacity: 0.65; }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 0.25rem;
+    }
+    .cert-box {
+      aspect-ratio: 3/4;
+      background: #d4e8d0;
+      border-radius: 6px;
+      border: 0.5px solid #b0cfb0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #2d5a3d;
+      overflow: hidden;
+    }
+    .cert-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cert-box span { font-size: 13px; opacity: 0.65; }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid #e8e6e0;
+      margin: 1rem 0;
+    }
+
+    .badge {
+      display: block;
+      color: #000;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+
+    /* ── 欄 2 & 3：格狀清單 ── */
+    .list-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 8px;
+      background: #e6f4e8;
+      border: 1px solid #b8ddbf;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+      user-select: none;
+    }
+    .list-item:hover {
+      background: #cce4f7;
+      border-color: #5a9fc2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(60,120,180,0.18);
+      color: #000;
+    }
+    .list-item:active {
+      transform: translateY(0);
+      background: #a8d8b0;
+    }
+
+    /* ── 服務項目頁 / 防治項目頁：縱向列表 ── */
+    .row-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .row-card {
+      background: #e6f4e8;
+      border: 1px solid #b8ddbf;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+    }
+
+    /* 左側圖片區 */
+    .row-card-img {
+      flex: 0 0 200px;
+      min-height: 220px;
+      background: #c8dfc0;
+      border-right: 1px solid #b8ddbf;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #2d5a3d;
+      font-size: 13px;
+      opacity: 0.75;
+      overflow: hidden;
+    }
+    .row-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* 右側內容區 */
+    .row-card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .row-card-header {
+      padding: 0.85rem 1.25rem;
+      background: #ddeaf8;
+      border-bottom: 0.5px solid #c8d8e8;
+    }
+    .row-card-header h3 {
+      font-size: 19px;
+      font-weight: 700;
+      color: #000;
+      letter-spacing: 0.05em;
+    }
+    .row-card-content {
+      padding: 1rem 1.25rem;
+      /* 約容納600字的高度：使用 min-height */
+      min-height: 200px;
+      font-size: 15px;
+      line-height: 1.9;
+      color: #2c2c2a;
+    }
+
+    @media (max-width: 768px) {
+      .row-card { flex-direction: column; }
+      .row-card-img { flex: 0 0 auto; min-height: 140px; border-right: none; border-bottom: 1px solid #b8ddbf; }
+    }
+
+    /* ── 關於我們頁：上下排列 ── */
+    .about-section { padding: 1.5rem 2rem; }
+
+    /* 關於我們：圖文並排 */
+    .about-intro-wrap {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .about-intro-img {
+      flex: 0 0 260px;
+      aspect-ratio: 3/2;
+      background: #c8dfc0;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #2d5a3d;
+      overflow: hidden;
+    }
+    .about-intro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-intro-img span { font-size: 15px; opacity: 0.65; }
+    .about-intro-text {
+      flex: 1;
+      font-size: 16px;
+      line-height: 2.1;
+      color: #2c2c2a;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* 聯絡我們表單 */
+    .contact-form {
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .contact-field { display: flex; flex-direction: column; gap: 6px; }
+    .contact-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a3f7a;
+      letter-spacing: 0.04em;
+    }
+    .contact-textarea, .contact-input {
+      font-family: inherit;
+      font-size: 15px;
+      color: #2c2c2a;
+      background: #fff;
+      border: 1px solid #b0c8d8;
+      border-radius: 8px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+    }
+    .contact-textarea:focus, .contact-input:focus {
+      border-color: #4a85c0;
+      box-shadow: 0 0 0 3px rgba(74,133,192,0.15);
+    }
+    .contact-submit {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #2d6e3e 0%, #3a8a50 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 36px;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      box-shadow: 0 3px 10px rgba(45,110,62,0.28);
+    }
+    .contact-submit:hover {
+      background: linear-gradient(135deg, #245830 0%, #2d6e3e 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(45,110,62,0.35);
+    }
+    .contact-submit:active { transform: translateY(0); }
+    .contact-submit.sent {
+      background: linear-gradient(135deg, #888 0%, #aaa 100%);
+      box-shadow: none;
+      cursor: default;
+    }
+
+    /* 防治圖片集 */
+    .about-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .about-photo-card {
+      background: #c8dfc0;
+      border: 0.5px solid #b0cfb0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .about-photo-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #c8dfc0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d5a3d;
+      overflow: hidden;
+    }
+    .about-photo-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* 執照證書 */
+    .about-cert-grid {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .about-cert-card {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      background: #e6f4e8;
+      border: 1px solid #b8ddbf;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 0;
+      min-width: 260px;
+    }
+    .about-cert-img {
+      flex: 0 0 120px;
+      height: 160px;
+      background: #c8dfc0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d5a3d;
+      overflow: hidden;
+      border-right: 0.5px solid #b8ddbf;
+    }
+    .about-cert-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-cert-caption {
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .about-cert-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+    .about-cert-desc {
+      font-size: 13.5px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .about-section { padding: 1rem; }
+      .about-intro-wrap { flex-direction: column; }
+      .about-intro-img { flex: 0 0 auto; width: 100%; }
+      .about-photo-grid { grid-template-columns: repeat(3, 1fr); }
+      .about-cert-card { min-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .about-photo-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── 防治實績頁 ── */
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .achievement-card {
+      background: #e6f4e8;
+      border: 1px solid #b8ddbf;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .ach-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #c8dfc0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d5a3d;
+      overflow: hidden;
+    }
+    .ach-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ach-caption {
+      padding: 10px 14px 12px;
+      min-height: 48px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #2c2c2a;
+      line-height: 1.6;
+    }
+
+    /* ── 頁尾 ── */
+    footer {
+      background: transparent;
+      color: #000;
+      font-size: 18px;
+      padding: 0;
+      letter-spacing: 0.04em;
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      text-align: center;
+    }
+    .footer-inner {
+      background: linear-gradient(180deg, #dff2e1 0%, #eef8f0 100%);
+      border-top: 0.5px solid #b0cfb0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1.2rem 2rem;
+    }
+    .footer-info div { margin-bottom: 3px; }
+    .footer-qr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .qr-box {
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      border: 1px solid #b0cfb0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d5a3d;
+      font-size: 12px;
+      text-align: center;
+      padding: 6px;
+    }
+    .qr-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a3f7a;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── 響應式 ── */
+    @media (max-width: 768px) {
+      .header-top { padding: 0.9rem 1rem 0.7rem; }
+      .header-top h1 { font-size: 24px; letter-spacing: 0.2em; }
+      .header-top .tagline { font-size: 13px; }
+      nav { padding: 0 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      nav::-webkit-scrollbar { display: none; }
+      nav a { font-size: 14px; padding: 0.5rem 0.8rem; white-space: nowrap; }
+      main { grid-template-columns: 1fr !important; margin: 0.75rem; border-radius: 10px; }
+      .col + .col { border-left: none; border-top: 0.5px solid #e0ddd6; }
+      .col { min-height: unset; }
+      .col-header h2 { font-size: 17px; }
+      .list-group { grid-template-columns: 1fr 1fr; }
+      .list-item { font-size: 16px; padding: 12px 6px; }
+      .cert-grid { grid-template-columns: 1fr 1fr; }
+      .badge { font-size: 15px; }
+      .footer-inner { font-size: 14px; padding: 1rem; gap: 0.8rem; }
+      .qr-box { width: 80px; height: 80px; }
+      .qr-label { font-size: 13px; }
+      .service-grid, .pest-detail-grid, .achievement-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 380px) {
+      .header-top h1 { font-size: 20px; }
+      .list-item { font-size: 14px; }
+      nav a { font-size: 13px; padding: 0.5rem 0.6rem; }
+      .achievement-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 頁首 -->
+<header>
+  <div class="header-top">
+    <div style="display:flex; align-items:center; flex-wrap:nowrap; gap:0.4em; white-space:nowrap;">
+      <h1 style="margin-bottom:0; font-size:45px;">宜立興業有限公司</h1>
+      <span class="tagline" style="font-size:26px;">｜【專業病媒防治服務】｜【免費現場估價諮詢】</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#" data-page="about" class="active">關於我們</a>
+    <a href="#" data-page="service">服務項目</a>
+    <a href="#" data-page="pest">蟲害知識</a>
+  </nav>
+</header>
+<!-- 共用提示列 -->
+<div style="background:#c8f0d8; padding:12px 0; text-align:center;">
+  <span style="font-size:22px; font-weight:700; letter-spacing:0.08em;"><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.00s infinite, flash 1.8s ease-in-out 0.00s infinite;">如</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.08s infinite, flash 1.8s ease-in-out 0.08s infinite;">有</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.16s infinite, flash 1.8s ease-in-out 0.16s infinite;">任</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.24s infinite, flash 1.8s ease-in-out 0.24s infinite;">何</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.32s infinite, flash 1.8s ease-in-out 0.32s infinite;">問</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.40s infinite, flash 1.8s ease-in-out 0.40s infinite;">題</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.48s infinite, flash 1.8s ease-in-out 0.48s infinite;">，</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.56s infinite, flash 1.8s ease-in-out 0.56s infinite;">請</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.64s infinite, flash 1.8s ease-in-out 0.64s infinite;">點</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.72s infinite, flash 1.8s ease-in-out 0.72s infinite;">選</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.80s infinite, flash 1.8s ease-in-out 0.80s infinite;">右</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.88s infinite, flash 1.8s ease-in-out 0.88s infinite;">下</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 0.96s infinite, flash 1.8s ease-in-out 0.96s infinite;">角</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.04s infinite, flash 1.8s ease-in-out 1.04s infinite;">圖</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.12s infinite, flash 1.8s ease-in-out 1.12s infinite;">示</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.20s infinite, flash 1.8s ease-in-out 1.20s infinite;">進</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.28s infinite, flash 1.8s ease-in-out 1.28s infinite;">入</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.36s infinite, flash 1.8s ease-in-out 1.36s infinite;">諮</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.44s infinite, flash 1.8s ease-in-out 1.44s infinite;">詢</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.52s infinite, flash 1.8s ease-in-out 1.52s infinite;">，</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.60s infinite, flash 1.8s ease-in-out 1.60s infinite;">非</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.68s infinite, flash 1.8s ease-in-out 1.68s infinite;">常</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.76s infinite, flash 1.8s ease-in-out 1.76s infinite;">謝</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.84s infinite, flash 1.8s ease-in-out 1.84s infinite;">謝</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 1.92s infinite, flash 1.8s ease-in-out 1.92s infinite;">您</span><span style="display:inline-block; animation: wave 1.8s ease-in-out 2.00s infinite, flash 1.8s ease-in-out 2.00s infinite;">！</span></span>
+</div>
+<style>
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes flash {
+  0%, 100% { color: #1a1a1a; }
+  50%       { color: #7ec8e3; }
+}
+</style>
+
+
+<!-- ════════════════════════════════
+     頁面 1：關於我們（預設）
+     ════════════════════════════════ -->
+<div class="page active" id="page-about">
+  <main style="grid-template-columns: 1fr;">
+    <div class="col" style="min-height:unset;">
+<!-- ① 關於我們 -->
+      <div class="col-header"><h2>關於我們</h2></div>
+      <div class="col-body about-section">
+        <div class="about-intro-text" style="max-width:860px;">
+        </div>
+      </div>
+
+      <!-- ② 常見問題 -->
+      <div class="col-header" style="border-top: 0.5px solid #e0ddd6;"><h2>常見問題</h2></div>
+      <div class="col-body about-section">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #c8dfc8; border-radius:10px; padding:16px;">
+            <div style="font-size:15px; font-weight:700; color:#111; margin-bottom:8px;">問題：</div>
+            <div style="font-size:14px; color:#1a5fa8; line-height:1.7;">解答：</div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- ④ 防治實績 -->
+      <div class="col-header" style="border-top: 0.5px solid #e0ddd6;"><h2>防治實績</h2></div>
+      <div class="col-body about-section">
+        <div class="about-photo-grid">
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+          <div class="about-photo-card">
+            <div class="about-photo-img">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ 執照證書 -->
+      <div class="col-header" style="border-top: 0.5px solid #e0ddd6;"><h2>執照證書</h2></div>
+      <div class="col-body about-section">
+        <div class="about-cert-grid">
+          <div class="about-cert-card">
+            <div class="about-cert-img">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="about-cert-caption">
+              <div class="about-cert-title">環藥病媒字第 01-225 號</div>
+              <div class="about-cert-desc">病媒防治業許可執照</div>
+            </div>
+          </div>
+          <div class="about-cert-card">
+            <div class="about-cert-img">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="about-cert-caption">
+              <div class="about-cert-title">檢疫編號 KL-0060 號</div>
+              <div class="about-cert-desc">病媒防治技術員證書</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ════════════════════════════════
+     頁面 2：服務項目
+     ════════════════════════════════ -->
+<div class="page" id="page-service">
+<main style="grid-template-columns: 220px 1fr; align-items: start;">
+
+    <!-- 左側：服務項目 + 防治項目 列表 -->
+    <div class="col" style="min-height: unset; position: sticky; top: 0;">
+      <div class="col-header"><h2>服務項目</h2></div>
+      <div class="col-body" style="padding: 1rem;">
+        <div class="list-group">
+          <div class="list-item" data-goto-page="service" data-goto-id="service-環境防治規劃" style="font-size:16px; padding:10px 8px;">環境防治規劃</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-季節害蟲預防" style="font-size:16px; padding:10px 8px;">季節害蟲預防</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-現場估價諮詢" style="font-size:16px; padding:10px 8px;">現場估價諮詢</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-長期配合專案" style="font-size:16px; padding:10px 8px;">長期配合專案</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-清潔工程" style="font-size:16px; padding:10px 8px;">清潔工程</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-木質包材熱處理" style="font-size:16px; padding:10px 8px;">木箱及棧板釘製及熱處理</div>
+        </div>
+      </div>
+      <div class="col-header" style="border-top: 0.5px solid #e0ddd6;"><h2>防治項目</h2></div>
+      <div class="col-body" style="padding: 1rem;">
+        <div class="list-group">
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-一般病蟲害防治" style="font-size:16px; padding:10px 8px;">一般病蟲害防治</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-紅火蟻防治" style="font-size:16px; padding:10px 8px;">紅火蟻防治</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-白蟻防治" style="font-size:16px; padding:10px 8px;">白蟻防治</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-除菌作業" style="font-size:16px; padding:10px 8px;">除菌作業</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-鼠害防治" style="font-size:16px; padding:10px 8px;">鼠害防治</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-跳蚤防治" style="font-size:16px; padding:10px 8px;">跳蚤防治</div>
+          <div class="list-item" data-goto-page="service" data-goto-id="service-pest-粉狀蛀蟲" style="font-size:16px; padding:10px 8px;">粉狀蛀蟲</div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="min-height:unset; border-left: 0.5px solid #e0ddd6;">
+      <div class="col-header"><h2>詳細介紹</h2></div>
+      <div class="col-body">
+        <div class="row-list">
+
+          <div class="row-card" id="service-環境防治規劃">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>環境防治規劃</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-季節害蟲預防">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>季節害蟲預防</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-現場估價諮詢">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>現場估價諮詢</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-長期配合專案">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>長期配合專案</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+          <div class="row-card" id="service-清潔工程">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>清潔工程</h3></div>
+              <div class="row-card-content">
+                <ul>
+                  <li>浴室玻璃除水垢</li>
+                  <li>機洗地毯</li>
+                  <li>機洗地板打蠟</li>
+                  <li>洗冷氣</li>
+                  <li>洗洗衣機</li>
+                  <li>洗水塔</li>
+                  <li>地板晶化</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-木質包材熱處理">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>木箱及棧板釘製及熱處理</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+          <div class="row-card" id="service-pest-一般病蟲害防治">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>一般病蟲害防治</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-紅火蟻防治">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>紅火蟻防治</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-白蟻防治">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>白蟻防治</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-除菌作業">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>除菌作業</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-鼠害防治">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>鼠害防治</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-跳蚤防治">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>跳蚤防治</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+          <div class="row-card" id="service-pest-粉狀蛀蟲">
+            <div class="row-card-img">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>圖片</span>
+            </div>
+            <div class="row-card-body">
+              <div class="row-card-header"><h3>粉狀蛀蟲</h3></div>
+              <div class="row-card-content"></div>
+            </div>
+          </div>
+
+        </div><!-- /row-list 防治項目 -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ════════════════════════════════
+     頁面 3：蟲害知識
+     ════════════════════════════════ -->
+<div class="page" id="page-pest">
+<main style="grid-template-columns: 1fr;">
+
+        <!-- 蟲害知識：左7格 + 中間介紹 + 右7格 -->
+        <div style="display:flex; gap:0; padding:32px 24px; min-height:600px;">
+
+          <!-- 左側 7 格 -->
+          <div id="pest-left-col" style="display:grid; grid-template-columns: repeat(1, 100px); gap:12px; align-content:start; padding-right:24px; border-right:1px solid #d0e8f5; flex-shrink:0;">
+            <a href="#pest-紅火蟻" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">紅火蟻</a>
+            <a href="#pest-白蟻" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">白蟻</a>
+            <a href="#pest-螞蟻" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">螞蟻</a>
+            <a href="#pest-蚊類" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">蚊類</a>
+            <a href="#pest-蠅類" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">蠅類</a>
+            <a href="#pest-臭蟲" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">臭蟲</a>
+            <a href="#pest-蛀蟲" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">蛀蟲</a>
+          </div>
+
+          <!-- 中間介紹卡片 -->
+          <div style="flex:1; padding:0 28px; display:flex; flex-direction:column; gap:16px;">
+            <div class="row-card" id="pest-紅火蟻"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>紅火蟻</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-白蟻"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>白蟻</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-螞蟻"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>螞蟻</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-蚊類"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>蚊類</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-蠅類"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>蠅類</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-臭蟲"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>臭蟲</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-蛀蟲"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>蛀蟲</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-煙甲蟲"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>煙甲蟲</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-跳蚤"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>跳蚤</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-衣魚"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>衣魚</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-蛾蚋"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>蛾蚋</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-蟑螂"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>蟑螂</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-老鼠"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>老鼠</h3></div><div class="row-card-content"></div></div></div>
+            <div class="row-card" id="pest-其他"><div class="row-card-img"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>圖片</span></div><div class="row-card-body"><div class="row-card-header"><h3>其他</h3></div><div class="row-card-content"></div></div></div>
+          </div>
+
+          <!-- 右側 7 格 -->
+          <div id="pest-right-col" style="display:grid; grid-template-columns: repeat(1, 100px); gap:12px; align-content:start; padding-left:24px; border-left:1px solid #d0e8f5; flex-shrink:0;">
+            <a href="#pest-煙甲蟲" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">煙甲蟲</a>
+            <a href="#pest-跳蚤" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">跳蚤</a>
+            <a href="#pest-衣魚" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">衣魚</a>
+            <a href="#pest-蛾蚋" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">蛾蚋</a>
+            <a href="#pest-蟑螂" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">蟑螂</a>
+            <a href="#pest-老鼠" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">老鼠</a>
+            <a href="#pest-其他" class="pest-btn" style="width:100px;height:100px;background:#c8e6f9;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#222;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;">其他</a>
+          </div>
+
+        </div>
+
+        <style>
+          .pest-btn:hover { background:#aed8f0 !important; }
+        </style>
+
+  </main>
+</div>
+
+
+<!-- 頁尾 -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-qr">
+      <div class="qr-box"><img src="data:image/png;base64,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" alt="LINE QR Code" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+      <div class="qr-label">歡迎加入官方 LINE 諮詢</div>
+    </div>
+    <div class="footer-info">
+      <div>宜立興業有限公司</div>
+      <div>Office：新北市五股區成泰路 4 段 22 巷 10 號 2 樓</div>
+      <div>倉庫：新北市五股區外寮路 9-5 號 C 倉</div>
+      <div>TEL：02-8531-7112　｜　E-mail：eil.sin@msa.hinet.net　｜　FAX：02-8531-5373</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const navLinks = document.querySelectorAll('nav a[data-page]');
+  const pages = document.querySelectorAll('.page');
+
+  function switchPage(target) {
+    navLinks.forEach(a => a.classList.remove('active'));
+    const activeNav = document.querySelector(`nav a[data-page="${target}"]`);
+    if (activeNav) activeNav.classList.add('active');
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + target).classList.add('active');
+  }
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchPage(this.dataset.page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // 首頁項目點擊 → 跳頁並捲到對應區塊
+  document.querySelectorAll('.list-item[data-goto-page]').forEach(item => {
+    item.addEventListener('click', function() {
+      const targetPage = this.dataset.gotoPage;
+      const targetId   = this.dataset.gotoId;
+      switchPage(targetPage);
+      // 等 display 切換後再捲動
+      requestAnimationFrame(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+<script>
+  (function() {
+    var page = document.getElementById('page-pest');
+    var leftCol  = document.getElementById('pest-left-col');
+    var rightCol = document.getElementById('pest-right-col');
+    var offsetTop = 80; // 距頂部保留距離
+
+    function updateColPos() {
+      if (!page || !leftCol || !rightCol) return;
+      if (!page.classList.contains('active')) return;
+
+      var pageRect = page.getBoundingClientRect();
+      var scrollTop = window.scrollY || window.pageYOffset;
+
+      // 計算原始位置（頁面頂部 + padding）
+      var pageTop = scrollTop + pageRect.top + 32; // 32 = padding-top
+      var shift = Math.max(0, scrollTop + offsetTop - pageTop);
+
+      leftCol.style.transform  = 'translateY(' + shift + 'px)';
+      rightCol.style.transform = 'translateY(' + shift + 'px)';
+    }
+
+    window.addEventListener('scroll', updateColPos, { passive: true });
+    // 切換頁面時也重設
+    document.querySelectorAll('[data-page]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setTimeout(updateColPos, 50);
+      });
+    });
+  })();
+</script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a30bb10b319cc1d4d43194b/1jr75leo7';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
